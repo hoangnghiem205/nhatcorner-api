@@ -2,6 +2,7 @@ var config = require('../../config')
     , Sequelize = require('sequelize')
     , sequelize = new Sequelize(config.db, config.user, config.pass, {
         dialect: config.dialect,
+        host: config.host,
         port: config.db_port,
     });
 var db = {};
