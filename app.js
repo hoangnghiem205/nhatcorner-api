@@ -7,6 +7,14 @@ function init() {
     db.checkConnection(successHandle, errorHandle);
 }
 
+function successHandle(err) {
+    startServer();
+}
+
+function errorHandle(err) {
+    console.log('Unable to connect to the database:', err);
+}
+
 function startServer() {
     console.log('Connection has been established successfully.');
     var model_list = utils.loadModels();
@@ -17,14 +25,6 @@ function startServer() {
     http.listen(config.port, function () {
         console.log("API running at http://" + config.host + ":" + config.port)
     })
-}
-
-function successHandle(err) {
-    startServer();
-}
-
-function errorHandle(err) {
-    console.log('Unable to connect to the database:', err);
 }
 
 init();

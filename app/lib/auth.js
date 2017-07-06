@@ -2,17 +2,18 @@ var jwt = require('jsonwebtoken');
 
 module.exports = function (app, utils) {
     function login(uid, pass, callback) {
-        console.log("login");
+        console.log("login ", uid, pass);
         var model = utils.loadModel('user');
-        var where = {
+        var searchCond = {
             'email': uid
         }
-        model.findOne(where).then((user) => {
+        model.findOne({where: searchCond}).then((user) => {
+            console.log("user ",user);
             if (user == null) {
                 callback(false, 'Authentication failed. User not found.')
             }
             // var hashedPassword = bcrypt.hashSync(password, user.salt)
-            var hashedPassword = "123"
+            // var hashedPassword = "123"
             // if (user.password === hashedPassword) {
             if (user.pwd == pass) {
                 callback(true, 'Login success.')

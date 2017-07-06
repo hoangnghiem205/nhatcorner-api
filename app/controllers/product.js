@@ -1,3 +1,4 @@
+var render = require("../lib/render")();
 module.exports = function (product_model) {
     return {
         list: (req, res) => {
@@ -38,7 +39,6 @@ module.exports = function (product_model) {
         },
         insert: (req, res) => {
             product_model.create({
-                code: req.body.code,
                 name: req.body.name,
                 price: req.body.price,
                 raw_price: req.body.raw_price,
@@ -52,7 +52,11 @@ module.exports = function (product_model) {
                 branch_id: req.body.branch_id
             }).then((data) => {
                 console.log("success ", data);
-                res.json({ "status": "200", "message": "1 row(s) inserted", "data": data.dataValues });
+                data.dataValues.code = render.renderProductCode({branch: data.dataValues.branch_id, id: data.dataValues.id});
+                product_model.update(data.dataValues, { where: { id: data.dataValues.id } }).then((row)=> {
+                    res.json({ "status": "200", "message": "1 row(s) inserted", "data": data.dataValues });
+                })
+                
             });
         },
         update: (req, res) => {

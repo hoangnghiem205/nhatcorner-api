@@ -1,3 +1,4 @@
+var render = require("../lib/render")();
 module.exports = function (order_model) {
     return {
         list: (req, res) => {
@@ -41,13 +42,16 @@ module.exports = function (order_model) {
         },
         insert: (req, res) => {
             order_model.create({
-                code: req.body.code,
                 cust_id: req.body.cust_id,
                 note: req.body.note,
                 status: req.body.status
             }).then((data) => {
                 console.log("success ", data);
-                res.json({ "status": "200", "message": "1 row(s) inserted", "data": data.dataValues });
+                data.dataValues.code = render.renderOrderCode({id: data.dataValues.id});
+                order_model.update(data.dataValues, { where: { id: data.dataValues.id } })
+                .then((row) => {
+                    res.json({ "status": "200", "message": "1 row(s) inserted", "data": data.dataValues });
+                });
             });
         },
         update: (req, res) => {
